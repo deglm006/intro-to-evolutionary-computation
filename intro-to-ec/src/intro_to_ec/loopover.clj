@@ -52,7 +52,7 @@
                       (flatten goal-board)
                       (flatten current-board)))))
 
-(defn make-n-puzzle-problem
+(defn make-loopover-problem
   [goal-board heuristic]
   {:goal? #(= goal-board %)
    :make-children children

@@ -14,36 +14,26 @@
     (assoc-in (assoc-in board old-pos new-value)
               new-pos old-value)))
 
-; (reduce #(assoc-in board %1 %2)
-
-(defn shift 
+(defn shift
   [board colRow dir n]
-  (if colRow
-    (if dir
-      (reduce #(swap board [n %] [n (inc %)]) (range (dec (count (:board state)))))
-      (doseq [i (range (dec (count (:board state))))]
-        (swap board [n i] [n (inc i)]))
-      (doseq [i (range (dec (count (:board state))) 0 -1)]
-        (swap board [n i] [n (dec i)]))
-    )
-    (if dir
-      (doseq [i (range (dec (count (:board state))))]
-        (swap board [i n] [(inc i) n]))
-      (doseq [i (range (dec (count (:board state))) 0 -1)]
-        (swap board [i n] [(dec i) n]))
-    )
-  )
-)
+  (let [board-size-1 (dec (count board))]
+    (if colRow
+      (if dir
+        (reduce #(swap %1 [n %2] [n (inc %2)]) board  (range board-size-1))
+        (reduce #(swap %1 [n %2] [n (dec %2)]) board  (range board-size-1 0 -1))
+      )
+      (if dir
+        (reduce #(swap %1 [%2 n] [(inc %2) n]) board  (range board-size-1))
+        (reduce #(swap %1 [%2 n] [(dec %2) n]) board  (range board-size-1 0 -1))
+      ))))
 
 (defn children [state]
   "Generate the collection of child states that are reachable
    from the given state. This is what would result from moving
    the 'blank' space up, down, left, and right."
   (let [board-size (count (:board state))]
-    (for colRow [true false]
-      (for dir [true false]
-        (for n (range 0 board-size)
-          (->State (shift (:board state) colRow dir n)))))))
+    (for [colRow [true false]      dir [true false]      n (range 0 board-size)]
+          (->State (shift (:board state) colRow dir n)))))
 
 (defn state->vec [state]
   (flatten (:board state)))
@@ -76,7 +66,7 @@
    :heuristic heuristic})
 
 
-A B C D
-E F G H
-I J K L
-M N O P
+; A B C D
+; E F G H
+; I J K L
+; M N O P

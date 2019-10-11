@@ -1,9 +1,5 @@
 (ns intro-to-ec.loopover)
 
-; This essentially defines a type, `State`, that is a map
-; with at least two keys, `:board` and `:blank-position`.
-(defrecord State [board])
-
 (defn legal? [board-size n]
   (and (<= 0 n) (< n board-size)))
 
@@ -27,41 +23,38 @@
         (reduce #(swap %1 [%2 n] [(dec %2) n]) board  (range board-size-1 0 -1))
       ))))
 
-(defn children [state]
+(defn children [board]
   "Generate the collection of child states that are reachable
    from the given state. This is what would result from moving
-   the 'blank' space up, down, left, and right."
-  (let [board-size (count (:board state))]
+   any column up or down and any row left or right"
+  (let [board-size (count board)]
     (for [colRow [true false]      dir [true false]      n (range 0 board-size)]
-          (->State (shift (:board state) colRow dir n)))))
+          (shift board colRow dir n))))
 
-(defn state->vec [state]
-  (flatten (:board state)))
-
-(defn num-wrong [goal-state current-state]
+(defn num-wrong [goal-board current-board]
   "A simple heuristic that counts the number of incorrectly
    placed tiles."
   (count (filter identity
                  (map not=
-                      (state->vec goal-state)
-                      (state->vec current-state)))))
+                      (flatten goal-board)
+                      (flatten current-board)))))
 
 (defn zero-or-same? [[x y]]
   (or (= x y)
       (zero? x)
       (zero? y)))
 
-(defn num-non-blank-wrong [goal-state current-state]
+(defn num-non-blank-wrong [goal-board current-board]
   "A simple heuristic that counts the number of incorrectly
    placed non-blank tiles."
   (count (remove zero-or-same?
                  (map (fn [x y] [x y])
-                      (state->vec goal-state)
-                      (state->vec current-state)))))
+                      (flatten goal-board)
+                      (flatten current-board)))))
 
 (defn make-n-puzzle-problem
   [goal-board heuristic]
-  {:goal? #(= goal-board (:board %))
+  {:goal? #(= goal-board %)
    :make-children children
    :heuristic heuristic})
 

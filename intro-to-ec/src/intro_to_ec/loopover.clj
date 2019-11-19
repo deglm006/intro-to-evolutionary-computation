@@ -74,13 +74,11 @@
   (let [n (count goal-board)
         shuf (partition n (shuffle (flatten goal-board)))
         ]
-    (println shuf)
     (vec
      (for [x (range n)]
-       (let [sub (first shuf)
-             shuf (rest shuf)]
-         (vec sub)
-         )
+
+         (vec (nth shuf x))
+
        )
      )
     )

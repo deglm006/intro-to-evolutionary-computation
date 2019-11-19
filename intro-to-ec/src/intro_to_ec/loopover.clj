@@ -52,12 +52,18 @@
                  (=
                   (get (get goal-board i) j)
                   (get (get current-board i) j))
-                  (+ (inc i) j (inc i))
+                  (+ (* i 1.5)  (* j 1.4))
                   0)))
             (for [x (range 1 (inc (count goal-board)))]
-              (if (square goal-board current-board x)
-                 (Math/pow 100 x)
-                 0)))))
+              (if (intro-to-ec.loopover/square goal-board current-board x)
+                (Math/pow 1000 (Math/pow x (*' x 2 x)))
+                0))
+            (for [x (range 1 (count goal-board))]
+              (if (intro-to-ec.loopover/row goal-board current-board x)
+                (Math/pow 10000 (Math/pow x (*' x 2 x)))
+                0))
+            )))
+   
 
 
    ))
@@ -86,6 +92,21 @@
                      (get-in current-board [x y]))
                 true
                 false)))))
+
+(defn row [goal-board current-board pos]
+  (let [n (count goal-board)]
+    (every? identity
+            (for [y (range 1 n)]
+              (if 
+               (= (get-in goal-board [pos y])
+                  (get-in current-board [pos y]))
+                true
+                false
+                )
+              )
+            )
+    )
+  )
 
 (defn randomize [goal-board]
   "Takes a given board and shuffles the tiles."

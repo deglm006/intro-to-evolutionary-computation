@@ -38,7 +38,7 @@
   [{:keys [get-next-node add-children]}
    {:keys [goal? make-children heuristic goal-board]}
    start-node max-calls]
-  (loop [frontier (pq/priority-queue (partial heuristic goal-board)  :elements [start-node] :variant :set)
+  (loop [frontier (pq/priority-queue heuristic :elements [start-node] :variant :set)
          came-from {start-node :start-node}
          num-calls 0]
     (println num-calls ": " frontier)

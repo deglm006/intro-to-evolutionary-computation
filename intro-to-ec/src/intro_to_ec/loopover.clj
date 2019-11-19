@@ -56,7 +56,8 @@
   [goal-board heuristic]
   {:goal? #(= goal-board %)
    :make-children children
-   :heuristic heuristic})
+   :heuristic (partial heuristic goal-board)
+   :goal-board goal-board})
 
 
 ; A B C D

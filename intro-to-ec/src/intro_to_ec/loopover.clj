@@ -90,16 +90,25 @@
 (defn randomize [goal-board]
   "Takes a given board and shuffles the tiles."
   (let [n (count goal-board)
-        shuf (partition n (shuffle (flatten goal-board)))
-        ]
+        shuf (partition n (shuffle (flatten goal-board)))]
     (vec
      (for [x (range n)]
+       (vec (nth shuf x))))))
 
-         (vec (nth shuf x))
-
+(defn make-rand [goal-board]
+  (loop [thing (children goal-board)
+         num 0]
+    (if (= num 300)
+      (rand-nth thing)
+      (recur
+       (children (rand-nth thing))
+       (inc num)
        )
-     )
+      )
+    
     )
+  
+  
   )
 
 (def goal-board-2 [[0 1][2 3]])

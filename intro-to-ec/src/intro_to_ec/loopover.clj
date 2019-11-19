@@ -69,6 +69,13 @@
                       (flatten goal-board)
                       (flatten current-board)))))
 
+(defn randomize [goal-board]
+  "Takes a given board and shuffles the tiles."
+  (let [n (count goal-board)]
+    (partition n (shuffle (flatten goal-board)))
+    )
+  )
+
 (def goal-board-2 [[0 1][2 3]])
 
 (def goal-board-3 [[0 1 2][3 4 5][6 7 8]])

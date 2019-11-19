@@ -42,18 +42,25 @@
 (defn weighted-num-wrong [goal-board current-board]
   "A simple heuristic that counts the number of incorrectly
    placed tiles."
-  (-(apply + (flatten
-    (for [i (range (count goal-board))]
-      (for [j (range (count goal-board))]
-        ;(+ 0(* (inc(inc i))(inc j)
-          (if
-            (=
-              (get (get goal-board i) j)
-              (get (get current-board i) j))
-            (+ (inc i) j (inc i) )
-            0
-            )
-           ))))))
+  (-
+   (apply +
+          (flatten
+           (concat
+            (for [i (range (count goal-board))]
+              (for [j (range (count goal-board))]
+                (if
+                 (=
+                  (get (get goal-board i) j)
+                  (get (get current-board i) j))
+                  (+ (inc i) j (inc i))
+                  0)))
+            (for [x (range 1 (inc (count goal-board)))]
+              (if (square goal-board current-board x)
+                 (Math/pow 100 x)
+                 0)))))
+
+
+   ))
 ;))
 
 (defn zero-or-same? [[x y]]

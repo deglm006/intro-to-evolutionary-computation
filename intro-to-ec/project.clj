@@ -5,7 +5,9 @@
                       :url "https://www.eclipse.org/legal/epl-2.0/"}
             :dependencies [[org.clojure/clojure "1.10.0"]
                            [org.clojure/math.combinatorics "0.1.6"]
-                           [proto-repl "0.3.1"]]
+                           [proto-repl "0.3.1"]
+                           [shams/priority-queue "0.1.2"]
+                           [org.clojure/data.priority-map "0.0.10"]]
             :plugins [[jonase/eastwood "0.3.6"]
                       [lein-cljfmt "0.6.4"]
                       [lein-kibit "0.1.7"]]

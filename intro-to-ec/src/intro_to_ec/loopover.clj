@@ -69,6 +69,22 @@
                       (flatten goal-board)
                       (flatten current-board)))))
 
+(defn square [goal-board current-board i]
+  (let [n (count goal-board)]
+    (every? identity
+         (for [x (range (- n i) n)
+               y (range (- n i) n)]
+
+           (if (= (get-in goal-board [x y])
+                  (get-in current-board [x y]))
+             true
+             false))
+
+         )
+    )
+
+  )
+
 (defn randomize [goal-board]
   "Takes a given board and shuffles the tiles."
   (let [n (count goal-board)

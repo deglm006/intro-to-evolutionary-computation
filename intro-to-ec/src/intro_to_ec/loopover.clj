@@ -94,14 +94,14 @@
              (Math/pow 10 (* i (numRightRow goal-board current-board i))))
            (for [x (range 1 (count goal-board))]
              (if (= (intro-to-ec.loopover/squar goal-board current-board x) true)
-               (Math/pow 100 (Math/pow x (*' x 2 x)))
+               (Math/pow 1000000000 (Math/pow x (*' x 2 x)))
                0))
            (for [x (range 1 (count goal-board))]
              (if (intro-to-ec.loopover/row goal-board current-board x)
-               (Math/pow 1000 (Math/pow x (*' x 2 x)))
+               (Math/pow 1000000000 x)
                0))
            (if (= goal-board current-board)
-             [1000000000000000]
+             [1000000000000000000000000000]
              [0])))))
 
 (defn zero-or-same? [[x y]]

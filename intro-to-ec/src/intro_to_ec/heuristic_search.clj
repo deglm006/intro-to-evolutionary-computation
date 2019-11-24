@@ -73,10 +73,11 @@
        :else
        (let [kids (remove-previous-states
                    (make-children current-node) frontier (keys came-from))]
-                   (println num-calls ": Current Board: " current-node)
+            (println num-calls ": Current Board: " current-node)
          (let [updated-cost (+ 1 (get cost-so-far current-node))]
-           (let [priority-frontier (reverse (vec
-                   (into (pq/priority-queue #(+ (heuristic %) updated-cost)) (add-children kids (rest frontier)))))]
+           (let [priority-frontier 
+                                    (vec
+                                     (into (pq/priority-queue #(+ (heuristic %) updated-cost)) (add-children kids (rest frontier))))]
              ;(println "Kids: " (take 6 priority-frontier))
              (recur priority-frontier
               (reduce (fn [cf child] (assoc cf child current-node)) came-from kids)

@@ -75,6 +75,21 @@
                  (for [j (range (count goal-board))]
                    (rightRow goal-board current-board i j)))))
 
+(defn coords [board val]
+  (filter identity (flatten
+  (for [x (range (count board))]
+    (for [y (range (count board))]
+      (if (= val (get (get board x) y))
+        [x y]
+        nil))))))
+
+(defn distance-away [goal-board current-board val]
+  ;(println (coords goal-board val))
+  (+ (Math/abs (* 1.25 (- (first (coords goal-board val))
+                  (first (coords current-board val)))))
+     (Math/abs (* 0.75 (- (last  (coords goal-board val))
+                  (last  (coords current-board val)))))))
+
 (defn weighted-num-wrong [goal-board current-board]
   "A simple heuristic that counts the number of incorrectly
    placed tiles."
@@ -82,27 +97,32 @@
   (apply +'
          (flatten
           (concat
-           (for [i (range (count goal-board))]
-             (for [j (range (count goal-board))]
+           (for [x (range (count goal-board))]
+             (for [y (range (count goal-board))]
                (if
                 (=
-                 (get (get goal-board i) j)
-                 (get (get current-board i) j))
-                 (+ (* i 1.5)  (* j 1.4))
+                 (get (get goal-board x) y)
+                 (get (get current-board x) y))
+                 (+ (* x 1.25)  (* y 1.75))
                  0)))
-           (for [i (range (count goal-board))]
-             (Math/pow 10 (* i (numRightRow goal-board current-board i))))
-           (for [x (range 1 (count goal-board))]
+
+           (for [x (range (count goal-board))]
+             (for [y (range (count goal-board))]
+               (- (* 2 (dec (count goal-board)))
+                  (distance-away goal-board current-board (get (get current-board x) y)))))
+
+           (for [x (range (count goal-board))]
+             (Math/pow 2 (* x (numRightRow goal-board current-board x))))
+
+           (for [x (range 1 (inc(count goal-board)))]
              (if (= (intro-to-ec.loopover/squar goal-board current-board x) true)
-               (Math/pow 1000000000 (Math/pow x (*' x 2 x)))
+               (Math/pow 8 x)
                0))
+
            (for [x (range 1 (count goal-board))]
              (if (intro-to-ec.loopover/row goal-board current-board x)
-               (Math/pow 1000000000 x)
-               0))
-           (if (= goal-board current-board)
-             [1000000000000000000000000000]
-             [0])))))
+               (Math/pow 4 x)
+               0))))))
 
 (defn zero-or-same? [[x y]]
   (or (= x y)
@@ -128,7 +148,7 @@
 (defn make-rand [goal-board]
   (loop [thing (children goal-board)
          num 0]
-    (if (= num 10)
+    (if (= num 100000)
       (rand-nth thing)
       (recur
        (children (rand-nth thing))
@@ -150,7 +170,9 @@
    :heuristic (partial heuristic goal-board)
    :goal-board goal-board})
 
-;(hs/a-star-search hs/heuristic-search (lo/make-loopover-problem lo/goal-board-4 lo/weighted-num-wrong) (lo/randomize lo/goal-board-4) 300)
+;(hs/a-star-search hs/heuristic-search (lo/make-loopover-problem lo/goal-board-3 lo/weighted-num-wrong) [[5 7 1] [2 0 3] [6 4 8]] 150)
+; Best 116 calls - 13 Moves
+;(hs/a-star-search hs/heuristic-search (lo/make-loopover-problem lo/goal-board-3 lo/weighted-num-wrong) (lo/randomize lo/goal-board-3) 300)
 ;(hs/a-star-search hs/heuristic-search (lo/make-loopover-problem lo/goal-board-4 lo/weighted-num-wrong) [[\p \o \m \n][\k \l \j \i][\g \h \e \f][\c \d \b \a]] 300)
 ;(hs/a-star-search hs/heuristic-search (lo/make-loopover-problem lo/goal-board-3 lo/weighted-num-wrong) [[2 0 1][3 4 5][8 6 7]] 100)
 ;(require '[intro-to-ec.loopover :as lo])(require '[intro-to-ec.heuristic-search :as hs])
